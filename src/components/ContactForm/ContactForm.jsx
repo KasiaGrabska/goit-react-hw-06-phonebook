@@ -1,33 +1,52 @@
+import { nanoid } from 'nanoid';
 import { useDispatch } from 'react-redux';
-import { addContact } from '../../store/contactSlice';
+import { addContact } from '../../store/contactsSlice';
 
 const ContactForm = () => {
   const dispatch = useDispatch();
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const name = formData.get('name');
-    const number = formData.get('number');
-    if (!name || !number) return;
-    dispatch(addContact({ name, number }));
-    e.target.reset();
+  const formSubmit = evt => {
+    evt.preventDefault();
+
+    const name = evt.target.name.value;
+    const number = evt.target.number.value;
+    const id = nanoid();
+
+    const newContact = {
+      id: id,
+      name: name,
+      number: number,
+    };
+
+    dispatch(addContact(newContact));
+    evt.target.reset();
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Name
-        <input type="text" name="name" required />
-      </label>
-      <br />
-      <label>
-        Number
-        <input type="tel" name="number" required />
-      </label>
-      <br />
-      <button type="submit">Add contact</button>
-    </form>
+    <div>
+      <h2>Phonebook</h2>
+      <form onSubmit={formSubmit}>
+        <label>Name</label>
+        <input
+          type="text"
+          name="name"
+          pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+          title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+          placeholder="Enter name"
+          required
+        />
+        <label>Number</label>
+        <input
+          type="tel"
+          name="number"
+          pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+          title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+          placeholder="Enter phone number"
+          required
+        />
+        <button type="submit">Add contact</button>
+      </form>
+    </div>
   );
 };
 
