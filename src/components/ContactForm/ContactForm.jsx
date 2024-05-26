@@ -2,7 +2,7 @@ import { nanoid } from 'nanoid';
 import { useDispatch } from 'react-redux';
 import { addContact } from '../../store/contactsSlice';
 
-const ContactForm = () => {
+export const ContactForm = () => {
   const dispatch = useDispatch();
 
   const formSubmit = evt => {
